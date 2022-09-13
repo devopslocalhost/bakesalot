@@ -1,2 +1,5 @@
 venv
 .gitignorre
+.vscode
+.DS_Store
+__pycache__
