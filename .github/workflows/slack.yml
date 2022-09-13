@@ -1,13 +1,17 @@
 name: SLACK
 
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "slack"
   slack:
@@ -18,7 +22,8 @@ jobs:
     steps:
       - name: Notify slack
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: xoxb-481636866753-4086902024289-cXIJXVXHoddX7jTO4yWesp9u
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C041QMF3TE3\",\"text\":\"Hello world\"}'
+          args: '{\"channel\":\"C041QMF3TE3\",\"text\":\"New Pull Request Has Been Made\"}'
+
