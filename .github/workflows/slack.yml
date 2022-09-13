@@ -25,5 +25,5 @@ jobs:
           SLACK_BOT_TOKEN: xoxb-481636866753-4086902024289-cXIJXVXHoddX7jTO4yWesp9u
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C041QMF3TE3\",\"text\":\"New Pull Request Has Been Made\"}'
+          args: '{\"channel\":\"C041QMF3TE3\",\"text\":\"@Mubarak Abubakar Bunza New Pull Request Has Been Made\"}'
 
