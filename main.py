@@ -14,10 +14,10 @@ app = FastAPI()
 #         """
 #         self.name = name
 #         self.size = size
-    
+
 #     def get_bake_item(self):
 #         return f"{self.name, self.size}"
-        
+
 price_list = {
     "small_bread": 5,
     "small_buns": 1,
@@ -27,8 +27,9 @@ price_list = {
     "medium_cake": 20,
     "large_bread": 15,
     "large_buns": 3,
-    "large_cake": 30
+    "large_cake": 30,
 }
+
 
 @app.post("/order/")
 def create_order():
@@ -39,6 +40,7 @@ def create_order():
     """
     return {"message": "Baking order created"}
 
+
 @app.get("/orders")
 def get_orders():
     """Create new baking order and store for reuse
@@ -47,6 +49,7 @@ def get_orders():
         str: Created order details
     """
     return {"message": "Fetched all orders"}
+
 
 @app.get("/orders/{id}")
 def get_orders(id: int):
@@ -60,6 +63,7 @@ def get_orders(id: int):
     """
     return {"message": "Fetch order"}
 
+
 # def payment(order):
 #     pass
 
@@ -69,17 +73,18 @@ def get_orders(id: int):
 # def bake(order):
 #     pass
 
+
 @app.get("/")
 def root():
-    """Base or root path for bakesalot
-    """
+    """Base or root path for bakesalot"""
     return {"message": "Welcome to the Bakes-a-lot"}
+
 
 @app.get("/prices")
 def prices():
-    """Show price list of all bakery items
-    """
+    """Show price list of all bakery items"""
     return {"prices": price_list}
+
 
 def main():
     pass
