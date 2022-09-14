@@ -1,22 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
+from database import Base, Order, engine
+
+Base.metadata.create_all(engine)
 app = FastAPI()
-
-# class BakedItem:
-#     """Base class for any item in the bakery
-#     """
-#     def __init__(self, name: str, size: str) -> None:
-#         """Every item in the bakery has a name and size
-
-#         Args:
-#             name (str): Name of the baked goods e.g. bread, buns, cake, etc
-#             size (str): Size of item ordered, e.g. small, medium, large
-#         """
-#         self.name = name
-#         self.size = size
-
-#     def get_bake_item(self):
-#         return f"{self.name, self.size}"
 
 price_list = {
     "small_bread": 5,
@@ -30,15 +19,27 @@ price_list = {
     "large_cake": 30,
 }
 
+class OrderRequest(BaseModel):
+    """
+    Pydantic data model for order api call
+    """
+    order: str
+    quantity: int
 
-@app.post("/order/")
-def create_order():
+@app.post("/order/", status_code=status.HTTP_201_CREATED)
+def create_order(order: OrderRequest):
     """Create new baking order and store for reuse
 
     Returns:
         str: Created order details
     """
-    return {"message": "Baking order created"}
+    session = Session(bind=engine, expire_on_commit=False)
+    orderdb = Order(order = order.order, quantity = order.quantity)
+    session.add(orderdb)
+    session.commit()
+    ID = orderdb.id
+    session.close()
+    return f"Baking order created with id {ID}"
 
 
 @app.get("/orders")
@@ -48,20 +49,68 @@ def get_orders():
     Returns:
         str: Created order details
     """
-    return {"message": "Fetched all orders"}
+    session = Session(bind=engine, expire_on_commit=False)
+    orders = session.query(Order).all()
+    session.close()
+    return orders
 
-
-@app.get("/orders/{id}")
-def get_orders(id: int):
+@app.get("/orders/{ID}")
+def get_order(ID: int):
     """Fetch specific order item
 
     Args:
-        id (int): Order ID
+        ID (int): Order ID
 
     Returns:
         str: Order details
     """
-    return {"message": "Fetch order"}
+    session = Session(bind=engine, expire_on_commit=False)
+    order = session.query(Order).get(ID)
+    session.close()
+    if not order:
+        raise HTTPException(status_code=404, detail=f"Order with id {ID} not found")
+    return f"Order with id: {order.id} and quantity: {order.quantity} available"
+
+@app.put("/orders/{ID}")
+def update_order(ID: int, order: str, quantity: int):
+    """Fetch specific order item
+
+    Args:
+        ID (int): Order ID
+        Order: Updated order details
+        Quantity: Updated order quantity
+
+    Returns:
+        str: Order details
+    """
+    session = Session(bind=engine, expire_on_commit=False)
+    if dborder := session.query(Order).get(ID):
+        dborder.order = order
+        dborder.quantity = quantity
+        session.commit()
+    session.close()
+    if not dborder:
+        raise HTTPException(status_code=404, detail=f"Order with ID {ID} not found")
+    return dborder
+
+@app.delete("/orders/{ID}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_order(ID: int):
+    """Fetch specific order item
+
+    Args:
+        ID (int): Order ID
+
+    Returns:
+        str: Order details
+    """
+    session = Session(bind=engine, expire_on_commit=False)
+    
+    if not (dborder := session.query(Order).get(ID)):
+        raise HTTPException(status_code=404, detail=f"Order with id: {ID} not found")
+    session.delete(dborder)
+    session.commit()
+    session.close()
+    return None
 
 
 # def payment(order):
@@ -84,11 +133,3 @@ def root():
 def prices():
     """Show price list of all bakery items"""
     return {"prices": price_list}
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
