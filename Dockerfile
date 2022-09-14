@@ -1,9 +1,13 @@
-FROM python:3.8.13-slim-buster
+FROM python:3.9
 
 RUN mkdir -p /app
+
 COPY . main.py /app/
+
 WORKDIR /app
-RUN pip install -r requirements.txt
-RUN python -m textblob.download_corpora
-EXPOSE 8080
+
+COPY ./requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+
 CMD [ "uvicorn main:app --reload" ]
