@@ -1,13 +1,9 @@
 FROM python:3.9
 
-RUN mkdir -p /app
-
-COPY . main.py /app/
-
 WORKDIR /app
 
-COPY ./requirements.txt /app/requirements.txt
+COPY . /app/
 
 RUN pip install -r /app/requirements.txt
 
-CMD [ "uvicorn main:app --reload" ]
+CMD [ "uvicorn", "main:app", "--reload", "--port", "8000" ]
