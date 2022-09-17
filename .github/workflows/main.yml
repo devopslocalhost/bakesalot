@@ -28,6 +28,10 @@ jobs:
           black: true
           flake8: true
 
+      - name: Test with pytest
+        run: |
+          pytest
+
   tf_fmt:
     name: Provision Servers
     runs-on: ubuntu-latest
