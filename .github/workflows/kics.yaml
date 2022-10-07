@@ -16,9 +16,10 @@ jobs:
       with:
         path: 'terraform'
         token: ${{ secrets.GITHUB_TOKEN }}
-        enable_comments: true
-        ignore_on_exit: results
         output_path: myResults/
+        ignore_on_exit: results
+        enable_comments: true
+        
     - name: display kics results
       run: |
         cat myResults/results.json
