@@ -1,0 +1,25 @@
+name: "KICS IaC Scan with PR comment"
+
+on:
+  # push:
+  #   branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  InfraScan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: run kics Scan
+      uses: checkmarx/kics-github-action@v1.6
+      with:
+        path: 'terraform'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        enable_comments: true
+        ignore_on_exit: results
+        output_path: myResults/
+    - name: display kics results
+      run: |
+        cat myResults/results.json
+
