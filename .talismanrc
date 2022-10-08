@@ -1,0 +1,5 @@
+fileignoreconfig:
+- filename: .github/workflows/main.yml
+  checksum: b6c3d7ea277544f184b4e144a83304f64b6a638ec59cc900908b85466787b153
+- filename: terraform/main.tf
+  checksum: a0472009b19b6e158d4535c6eabefc0cf863b73f9964dc60b2d78fea75bcacf4
